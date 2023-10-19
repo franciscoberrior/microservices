@@ -1,4 +1,4 @@
-package org.neoris.microservices.config;
+package org.neoris.microservices.config.datasource;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;

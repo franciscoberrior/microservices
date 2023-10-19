@@ -1,7 +1,9 @@
-package org.neoris.microservices.config;
+package org.neoris.microservices.config.datasource;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     basePackages = {"org.neoris.microservices.accounts"})
 public class AccountDatasourceConfiguration {
 
+  @Value("${spring.datasource.account.migration.location}")
+  private String locations;
   @Value("${spring.datasource.account.username}")
   private String username;
   @Value("${spring.datasource.account.password}")
@@ -57,5 +61,15 @@ public class AccountDatasourceConfiguration {
       @Qualifier("accountEntityManagerFactory") EntityManagerFactory entityManagerFactory
   ) {
     return new JpaTransactionManager(entityManagerFactory);
+  }
+
+  @PostConstruct
+  public void scheduleMigration() {
+    Flyway.configure()
+        .dataSource(url, username, password)
+        .locations(locations, "db/specific/h2")
+        .baselineOnMigrate(true)
+        .load()
+        .migrate();
   }
 }

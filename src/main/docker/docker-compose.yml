@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  app:
+    image: 'microservices:latest'
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - 8080:8080
+    environment:
+      - DB_URL=db
+    depends_on:
+      - db
+
+  db:
+    image: 'bitnami/postgresql:14.9.0-debian-11-r58'
+    build:
+      dockerfile: DockerfileDb
+    container_name: db
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
