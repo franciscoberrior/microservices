@@ -1,0 +1,37 @@
+info:
+  app:
+    name: account-core
+    description: account core neoris application
+    version: 1.0.0
+    encoding: UTF-8
+    java:
+      version: 1.11.0
+
+spring:
+  profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/neoris-ms1
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    account:
+      url: jdbc:postgresql://localhost:5432/neoris-ms2
+      username: postgres
+      password: 1234
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        enable_lazy_load_no_trans: true #LazyLoading
+        current_session_context_class: thread #LazyLoading
+        jdbc:
+          lob:
+            non_contextual_creation: true #Ignore CLOB creation
+  messages:
+    basename: i18n/messages, i18n/messages_es
+  flyway:
+    enabled: true
